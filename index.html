@@ -679,7 +679,7 @@
                       </h5>
                     </div>
                     <div>
-                      <form onsubmit="SendEmail();"   >
+                      <form  action="https://formspree.io/f/mvonveav" method="POST" id="my-form" >
                         <div class="row">
                           <div class="col-md-12 mb-3">
                             <div class="form-group">
@@ -706,11 +706,11 @@
                               <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                             </div>
                            </div>
-                          <!-- <div class="col-md-12 text-center my-3">
-                            <div class="loading">Loading</div>
+                            <div class="col-md-12 text-center my-3" id="my-form-status">
+                            <!-- <div class="loading">Loading</div>
                             <div class="error-message"></div>
-                            <div class="sent-message">Your message has been sent. Thank you!</div>
-                          </div>  -->
+                            <div class="sent-message">Your message has been sent. Thank you!</div> -->
+                          </div> 
                           <div class="col-md-12 text-center">
                             <button type="submit" class="button button-a button-big button-rouded">Send Message</button>
                           </div>
@@ -784,21 +784,51 @@
   <!-- Vendor JS Files -->
   <script src="https://smtpjs.com/v3/smtp.js"></script>
   <script >
-    function SendEmail(){
-      Email.send({
-    SecureToken: "aeecb0f5-f20a-4e8a-82b2-3d8d4ba9ee62",
-    To : 'anasamin2002f@gmail.com',
-    From : document.getElementById("email").value,
-    Subject : "New contact form",
-    Body : "Name"+document.getElementById("name").value
-    +"<br> Email: "+document.getElementById("email").value
-    +"<br> Subject: "+document.getElementById("subject").value
-    +"<br> Phone Number: "+document.getElementById("phoneNo").value
-    +"<br> Message: "+document.getElementById("message").value
-}).then(
-  message => alert(message)
-);
+    var form = document.getElementById("my-form");
+    
+    async function handleSubmit(event) {
+      event.preventDefault();
+      var status = document.getElementById("my-form-status");
+      var data = new FormData(event.target);
+      fetch(event.target.action, {
+        method: form.method,
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          status.innerHTML = "Thanks for your submission!";
+          form.reset()
+        } else {
+          response.json().then(data => {
+            if (Object.hasOwn(data, 'errors')) {
+              status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+            } else {
+              status.innerHTML = "Oops! There was a problem submitting your form"
+            }
+          })
+        }
+      }).catch(error => {
+        status.innerHTML = "Oops! There was a problem submitting your form"
+      });
     }
+    form.addEventListener("submit", handleSubmit)
+  //   var form = document.getElementById("my-form");
+  //   var status = document.getElementById("my-form-status");
+  // function success(){
+  //   form.reset();
+  //   status.innerHTML="Thanks for your submission!";
+  // }
+  // function error(){
+  //   status.innerHTML="oops! there was an error";
+  // }
+  // form.addEventListener("submet",function (ev) ){
+  //   ev.preventDefault();
+    
+
+  //}
+  
   </script>
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
