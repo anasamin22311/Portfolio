@@ -1,7 +1,7 @@
 <?php 
 
        $UserName = $_POST['name'];
-       $Email = $_POST['email'];
+       $Email = $_PO  ST['email'];
        $Subject = $_POST['subject'];
        $Msg = $_POST['Message'];
 
@@ -17,6 +17,7 @@
            {
                header("location:index.php?success");
            }
+          
        }
     
    
